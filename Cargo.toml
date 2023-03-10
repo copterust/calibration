@@ -1,0 +1,65 @@
+# Cargo.toml
+[package]
+edition = "2018"
+name = "blinky-rust"
+version = "0.1.0"
+
+[profile.release]
+opt-level = 'z' # turn on maximum optimizations. We only have 64kB
+lto = true      # Link-time-optimizations for further size reduction
+
+[dependencies]
+panic-abort = { version = "0.3.2", optional = true }
+asm-delay = "0.9.0"
+cortex-m = { version = "0.7.4", optional = true }
+cortex-m-rt = { version = "0.7.1", optional = true }
+nb = { version = "1.0.0", optional = true }
+# mpu9250 = { version = "0.24.0", optional = true }
+mpu9250 = {path = "../mpu9250", optional = true}
+dcmimu = { version = "0.2.2", optional = true }
+ryu = { version = "1.0.10", optional = true }
+lsm303c = { version = "0.2.0", optional = true }
+# lsm303c = {path = "../lsm303c", optional = true}
+bmp280 = { version = "0.0.5", optional = true, package = "bmp280-ehal" }
+shared-bus = { version = "0.2.3", optional = true }
+vl53l0x = { version = "0.3.1", optional = true }
+# vl53l0x = {path = "../vl53l0x", optional = true}
+nalgebra = { version = "0.31.0", optional = true, default-features = false }
+libm = { version = "0.2.2", optional = true }
+rand = { version = "0.8.5", optional = true, default-features = false }
+cortex-m-semihosting = { version = "0.5.0", optional = true }
+heapless = { version = "0.7.13", optional = true }
+ahrs = { git = "https://github.com/vickenty/ahrs", optional=true }
+
+
+[dependencies.cortex-m-rtic]
+version = "1.1.2"
+optional = true
+
+[dependencies.panic-semihosting]
+features = ["exit"]
+version = "0.6.0"
+optional = true
+
+[dependencies.ehal]
+features = ["unproven"]
+version = "0.2.7"
+package = "embedded-hal"
+optional = true
+
+[dependencies.stm32f3]
+version = "0.14.0"
+package = "stm32f3"
+optional = true
+
+[dependencies.hal]
+version = "0.42.0"
+package = "alt-stm32f30x-hal"
+optional = true
+features = ["rt", "stm32f303"]
+
+[features]
+with_hal = ["with_device", "nb", "ehal", "hal"]
+with_device = ["with_rt", "stm32f3/rt", "stm32f3/stm32f303"]
+with_rt = ["panic-abort", "cortex-m-rt", "cortex-m", ]
+with_mpu = ["with_hal", "mpu9250"]
